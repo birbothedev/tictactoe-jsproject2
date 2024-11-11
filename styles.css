@@ -4,8 +4,8 @@ body {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     margin: 0 auto;
 }
 
@@ -18,6 +18,7 @@ body {
     padding: 10px 20px;
     border-radius: 12px;
     cursor: pointer;
+    position: relative;
 }
 
 #playButton:hover {
@@ -32,18 +33,26 @@ body {
 #title {
     text-transform: capitalize;
     position: relative;
-    top: 0%;
     text-align: center;
 } 
 
+
 #gameContainer {
-    position: relative;
     display: grid;
-    grid-template-columns: repeat(3, 1fr); 
-    grid-template-rows: repeat(3, 1fr);   
-    place-items: center;
-    width: 700px;
-    height: 700px;
-    margin: 0 auto;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 100px);
+    width: 300px; 
+    height: 500px; 
+    background-color: white;
 }
 
+.tile {
+    border: 1px solid palegreen;
+    min-width: 100px;
+    min-height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 50px;
+    cursor: pointer;
+}

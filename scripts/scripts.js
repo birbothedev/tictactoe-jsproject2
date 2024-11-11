@@ -6,6 +6,5 @@ gameContainer.style.display = 'none';
 document.getElementById('playButton').addEventListener('click', function() {
     this.style.display = 'none'; 
     title.style.display = 'block';
-    gameContainer.style.display = 'grid';
-    hoverImages();
+    gameContainer.style.display = 'block';
 });
