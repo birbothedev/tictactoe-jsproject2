@@ -50,10 +50,10 @@ function playerTile(){
                 console.log("Computer turn!");
                 setTimeout(function(){
                     turnTitle.textContent = "Computer Turn";
-                }, 200);
+                }, 300);
                 setTimeout(function(){
                     computerTile();
-                }, 1000);
+                }, 1500);
                 checkGameCompletion();
             } else {
                 console.log("occupied");
@@ -77,7 +77,7 @@ function computerTile(){
         randomEmptyTile.appendChild(computerImage);
         setTimeout(function(){
             turnTitle.textContent = "Player Turn";
-        }, 200);
+        }, 300);
 
         isPlayerTurn = true;
         checkGameCompletion();
