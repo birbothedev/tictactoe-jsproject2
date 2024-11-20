@@ -45,6 +45,7 @@ function playerTile(){
                 playerImage.src = `images/${playerChoice}.png`;
                 playerImage.alt = `${playerChoice} image`;
                 playerImage.className = "imagesClass";
+                playerImage.id = playerChoice;
                 tile.appendChild(playerImage);
                 isPlayerTurn = false;
                 console.log("Computer turn!");
@@ -74,6 +75,7 @@ function computerTile(){
         computerImage.src = `images/${computerChoice}.png`;
         computerImage.alt = `${computerChoice} image`;
         computerImage.className = "imagesClass";
+        computerImage.id = computerChoice;
         randomEmptyTile.appendChild(computerImage);
         setTimeout(function(){
             turnTitle.textContent = "Player Turn";
@@ -84,7 +86,46 @@ function computerTile(){
     }
 }
 
+//after every move, evaluate the row and column next to the piece to 
+//see if there has been a win
+
 function checkGameCompletion(){
-    return
+    console.log("Checking for completion...");
+    let gameBoard = document.querySelectorAll('.tiles');
+    let gameBoardArray = Array.from(gameBoard);
+    for (i=0; i < gameBoardArray.length; i++){
+        //columns
+        if (i < 3 &&
+            gameBoardArray[i].id === gameBoardArray[i+3].id &&
+            gameBoardArray[i+3].id === gameBoardArray[i+6].id){
+                gameOver();
+                return
+        } 
+        //top right diagonal
+        else if(i === 2 &&
+            gameBoardArray[i].id === gameBoardArray[i+2].id &&
+            gameBoardArray[i+2].id === gameBoardArray[i+4].id){
+                gameOver();
+                return
+        } 
+        //rows
+        else if ( i % 3 ===0 &&
+            gameBoardArray[i].id === gameBoardArray[i+1].id &&
+            gameBoardArray[i+1].id === gameBoardArray[i+2].id){
+                gameOver();
+                return
+        } 
+        //top left diagonal
+        else if (i === 0 &&
+            gameBoardArray[i].id === gameBoardArray[i+4].id &&
+            gameBoardArray[i+4].id === gameBoardArray[i+8].id){
+                gameOver();
+                return
+        }
+    }
+}
+
+function gameOver(){
+    console.log("Game over!");
 }
 

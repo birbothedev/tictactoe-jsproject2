@@ -48,8 +48,8 @@ body {
     display: grid;
     grid-template-columns: repeat(3, calc(33.33%));
     grid-template-rows: repeat(3, calc(33.33%));
-    width: 600px; 
-    height: 600px; 
+    width: 400px; 
+    height: 400px; 
     gap: 1px;
 }
 
