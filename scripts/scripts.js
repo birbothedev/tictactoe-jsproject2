@@ -5,13 +5,16 @@ gameContainer.style.visibility = 'hidden';
 const choiceOptions = document.getElementById('choiceOptions');
 choiceOptions.style.visibility = 'hidden';
 const turnTitle = document.getElementById('turnTitle');
+const playAgainButton = document.getElementById('playAgain');
+playAgainButton.style.visibility = 'hidden';
 
 let isPlayerTurn = true;
 let playerChoice = "";
 let computerChoice = "";
 
-document.getElementById('playButton').addEventListener('click', function() {
-    this.style.display = 'none'; 
+initialize();
+
+function initialize(){
     choiceOptions.style.visibility = 'visible';
     let oChoice = document.getElementById('oImage');
     oChoice.addEventListener('click', function() {
@@ -25,7 +28,8 @@ document.getElementById('playButton').addEventListener('click', function() {
         computerChoice = "o";
         startGame();
     });
-});
+    playAgain(); 
+}
 
 function startGame(){
     title.style.visibility = 'visible';
@@ -127,5 +131,13 @@ function checkGameCompletion(){
 
 function gameOver(){
     console.log("Game over!");
+    playAgainButton.style.visibility = 'visible';
+    playAgain();
+}
+
+function playAgain(){
+    playAgainButton.addEventListener('click', function(){
+        location.reload();
+    });
 }
 

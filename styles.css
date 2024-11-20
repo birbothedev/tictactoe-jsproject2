@@ -15,7 +15,7 @@ body {
     margin: 0 auto;
 }
 
-#playButton {
+/* #playButton {
     font-size: large;
     text-align: center;
     text-decoration: none;
@@ -29,6 +29,27 @@ body {
 }
 
 #playButton:hover {
+    color: blueviolet;
+    padding: 10px 20px;
+    border-radius: 12px;
+    background-color: #27ae60;
+    align-items: center;
+    cursor: pointer;
+} */
+#playAgain {
+    font-size: large;
+    text-align: center;
+    text-decoration: none;
+    background-color: #8e44ad;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    top: 50%;
+    cursor: pointer;
+    position: relative;
+}
+
+#playAgain:hover {
     color: blueviolet;
     padding: 10px 20px;
     border-radius: 12px;
