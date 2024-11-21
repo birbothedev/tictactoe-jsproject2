@@ -11,6 +11,10 @@ playAgainButton.style.visibility = 'hidden';
 let isPlayerTurn = true;
 let playerChoice = "";
 let computerChoice = "";
+let gameFinished = false;
+let winner = "";
+let noWinner = false;
+let hasAWinner = false;
 
 initialize();
 
@@ -44,7 +48,7 @@ function playerTile(){
     let playerTilePlacement = document.querySelectorAll('.tiles');
     playerTilePlacement.forEach(tile => {
         tile.addEventListener('click', function(){
-            if (!tile.hasChildNodes() && isPlayerTurn){
+            if (!tile.hasChildNodes() && isPlayerTurn && !gameFinished){
                 const playerImage = document.createElement('img');
                 playerImage.src = `images/${playerChoice}.png`;
                 playerImage.alt = `${playerChoice} image`;
@@ -53,13 +57,15 @@ function playerTile(){
                 tile.appendChild(playerImage);
                 isPlayerTurn = false;
                 console.log("Computer turn!");
-                setTimeout(function(){
-                    turnTitle.textContent = "Computer Turn";
+                checkGameCompletion();
+                setTimeout(function () {
+                    if (!gameFinished) {
+                        turnTitle.textContent = "Computer Turn";
+                    }
                 }, 300);
                 setTimeout(function(){
                     computerTile();
                 }, 1500);
-                checkGameCompletion();
             } else {
                 console.log("occupied");
             }
@@ -71,7 +77,7 @@ function computerTile(){
     let computerTilePlacement = document.querySelectorAll('.tiles');
     let tilesArray = Array.from(computerTilePlacement).filter(tile => !tile.hasChildNodes());
 
-    if (tilesArray.length > 0 && !isPlayerTurn){
+    if (tilesArray.length > 0 && !isPlayerTurn && !gameFinished){
         randomTileIndex = Math.floor(Math.random() * tilesArray.length);
         let randomEmptyTile = tilesArray[randomTileIndex];
 
@@ -81,12 +87,14 @@ function computerTile(){
         computerImage.className = "imagesClass";
         computerImage.id = computerChoice;
         randomEmptyTile.appendChild(computerImage);
-        setTimeout(function(){
-            turnTitle.textContent = "Player Turn";
+        checkGameCompletion();
+        setTimeout(function () {
+            if (!gameFinished) {
+                turnTitle.textContent = "Player Turn";
+            }
         }, 300);
 
         isPlayerTurn = true;
-        checkGameCompletion();
     }
 }
 
@@ -97,41 +105,81 @@ function checkGameCompletion(){
     console.log("Checking for completion...");
     let gameBoard = document.querySelectorAll('.tiles');
     let gameBoardArray = Array.from(gameBoard);
+    let emptyArray = Array.from(gameBoard).filter(tile => !tile.hasChildNodes());
+
+    const getTileID = (tile) => {
+        if (tile.hasChildNodes()) {
+            const id = tile.firstChild.id;
+            if (id === playerChoice) {
+                winner = "Player";
+            } else {
+                winner = "Computer";
+            }
+            return id;
+        }
+        return null; 
+    };
+
     for (i=0; i < gameBoardArray.length; i++){
         //columns
         if (i < 3 &&
-            gameBoardArray[i].id === gameBoardArray[i+3].id &&
-            gameBoardArray[i+3].id === gameBoardArray[i+6].id){
+            getTileID(gameBoardArray[i]) &&
+            getTileID(gameBoardArray[i]) === getTileID(gameBoardArray[i+3]) &&
+            getTileID(gameBoardArray[i+3]) === getTileID(gameBoardArray[i+6])){
+                gameFinished = true;
+                hasAWinner = true;
                 gameOver();
                 return
         } 
         //top right diagonal
         else if(i === 2 &&
-            gameBoardArray[i].id === gameBoardArray[i+2].id &&
-            gameBoardArray[i+2].id === gameBoardArray[i+4].id){
+            getTileID(gameBoardArray[i]) &&
+            getTileID(gameBoardArray[i]) === getTileID(gameBoardArray[i+2]) &&
+            getTileID(gameBoardArray[i+2]) === getTileID(gameBoardArray[i+4])){
+                gameFinished = true;
+                hasAWinner = true;
                 gameOver();
                 return
         } 
         //rows
         else if ( i % 3 ===0 &&
-            gameBoardArray[i].id === gameBoardArray[i+1].id &&
-            gameBoardArray[i+1].id === gameBoardArray[i+2].id){
+            getTileID(gameBoardArray[i]) &&
+            getTileID(gameBoardArray[i]) === getTileID(gameBoardArray[i+1]) &&
+            getTileID(gameBoardArray[i+1]) === getTileID(gameBoardArray[i+2])){
+                gameFinished = true;
+                hasAWinner = true;
                 gameOver();
                 return
         } 
         //top left diagonal
         else if (i === 0 &&
-            gameBoardArray[i].id === gameBoardArray[i+4].id &&
-            gameBoardArray[i+4].id === gameBoardArray[i+8].id){
+            getTileID(gameBoardArray[i]) &&
+            getTileID(gameBoardArray[i]) === getTileID(gameBoardArray[i+4]) &&
+            getTileID(gameBoardArray[i+4]) === getTileID(gameBoardArray[i+8])){
+                gameFinished = true;
+                hasAWinner = true;
                 gameOver();
                 return
         }
+    }
+    //tiles full but no winner
+    if(emptyArray.length <= 0 && !hasAWinner){
+        noWinner = true;
+        gameFinished = true;
+            gameOver();
+            return
     }
 }
 
 function gameOver(){
     console.log("Game over!");
     playAgainButton.style.visibility = 'visible';
+    if (!noWinner){
+        turnTitle.textContent = `Winner: ${winner}!`;
+    }
+    else {
+        turnTitle.textContent = `No Winner!`;
+    }
     playAgain();
 }
 
