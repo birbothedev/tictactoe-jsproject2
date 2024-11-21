@@ -7,6 +7,9 @@ choiceOptions.style.visibility = 'hidden';
 const turnTitle = document.getElementById('turnTitle');
 const playAgainButton = document.getElementById('playAgain');
 playAgainButton.style.visibility = 'hidden';
+const restartButton = document.getElementById('restart');
+restartButton.style.visibility = 'hidden';
+const gameOptions = document.getElementById('gameOptions');
 
 let isPlayerTurn = true;
 let playerChoice = "";
@@ -19,29 +22,46 @@ let hasAWinner = false;
 initialize();
 
 function initialize(){
-    choiceOptions.style.visibility = 'visible';
-    let oChoice = document.getElementById('oImage');
-    oChoice.addEventListener('click', function() {
-        playerChoice = "o";
-        computerChoice = "x";
-        startGame();
+    const pVpButton = document.getElementById('playerVplayer');
+    const pVcButton = document.getElementById('playerVcomputer');
+    pVcButton.addEventListener('click', function(){
+        gameOptions.style.visibility = 'hidden';
+        choosePiece();
+        startGameComputer();
     });
-    let xChoice = document.getElementById('xImage');
-    xChoice.addEventListener('click', function() {
-        playerChoice = "x";
-        computerChoice = "o";
-        startGame();
+    pVpButton.addEventListener('click', function(){
+        gameOptions.style.visibility = 'hidden';
+        choosePiece();
     });
-    playAgain(); 
+    
 }
 
-function startGame(){
+function choosePiece(){
+        choiceOptions.style.visibility = 'visible';
+        let oChoice = document.getElementById('oImage');
+        oChoice.addEventListener('click', function() {
+            playerChoice = "o";
+            computerChoice = "x";
+            // startGame();
+        });
+        let xChoice = document.getElementById('xImage');
+        xChoice.addEventListener('click', function() {
+            playerChoice = "x";
+            computerChoice = "o";
+            // startGame();
+        });
+}
+
+function startGameComputer(){
     title.style.visibility = 'visible';
     gameContainer.style.visibility = 'visible';
     choiceOptions.style.display = 'none';
+    restartButton.style.visibility = 'visible';
     turnTitle.textContent = "Player Turn";
     playerTile();
     computerTile();
+    playAgain();
+    restartButtonPress();
 }
 
 function playerTile(){
@@ -174,6 +194,7 @@ function checkGameCompletion(){
 function gameOver(){
     console.log("Game over!");
     playAgainButton.style.visibility = 'visible';
+    restartButton.style.visibility = 'hidden';
     if (!noWinner){
         turnTitle.textContent = `Winner: ${winner}!`;
     }
@@ -188,4 +209,11 @@ function playAgain(){
         location.reload();
     });
 }
+
+function restartButtonPress(){
+    restartButton.addEventListener('click', function(){
+        location.reload();
+    });
+}
+
 

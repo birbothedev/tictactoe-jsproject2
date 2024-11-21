@@ -15,7 +15,7 @@ body {
     margin: 0 auto;
 }
 
-/* #playButton {
+#playAgain, #restart, #playerVplayer, #playerVcomputer {
     font-size: large;
     text-align: center;
     text-decoration: none;
@@ -24,32 +24,12 @@ body {
     padding: 10px 20px;
     border-radius: 12px;
     top: 50%;
+    margin: 10px;
     cursor: pointer;
     position: relative;
 }
 
-#playButton:hover {
-    color: blueviolet;
-    padding: 10px 20px;
-    border-radius: 12px;
-    background-color: #27ae60;
-    align-items: center;
-    cursor: pointer;
-} */
-#playAgain {
-    font-size: large;
-    text-align: center;
-    text-decoration: none;
-    background-color: #8e44ad;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 12px;
-    top: 50%;
-    cursor: pointer;
-    position: relative;
-}
-
-#playAgain:hover {
+#playAgain:hover, #restart:hover, #playerVplayer:hover, #playerVcomputer:hover {
     color: blueviolet;
     padding: 10px 20px;
     border-radius: 12px;
@@ -92,17 +72,23 @@ body {
     height: auto;
 }
 
-#choiceOptions{
+#choiceOptions, #gameOptions{
     position: fixed;
-    top: 50%;
+    top: 30%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 500px;
-    height: 500px;
+    width: 200px;
+    height: auto;
     display: flex;
     align-items: center;
     flex-direction: column;
     justify-content: space-evenly;
+}
+
+.optionsImages {
+    display: flex; 
+    flex-direction: row;
+    gap: 10px; 
 }
 
 h1 {
