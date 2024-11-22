@@ -42,6 +42,7 @@ body {
     text-transform: capitalize;
     position: relative;
     text-align: center;
+    margin-bottom: 5px;
 } 
 
 #gameContainer {
@@ -72,7 +73,7 @@ body {
     height: auto;
 }
 
-#choiceOptions, #gameOptions{
+#gameOptions{
     position: fixed;
     top: 30%;
     left: 50%;
@@ -85,20 +86,11 @@ body {
     justify-content: space-evenly;
 }
 
-.optionsImages {
-    display: flex; 
-    flex-direction: row;
-    gap: 10px; 
-}
-
 h1 {
     margin-bottom: 20px;
 }
 
-.optionsImages{
-    cursor: pointer;
-    width: 150px;
-    height: 150px;
-    margin: 10px;
-    display: inline-block;
+#timer {
+    left: 75%;
 }
+

@@ -2,22 +2,26 @@ const title = document.getElementById('title');
 title.style.visibility = 'hidden';
 const gameContainer = document.getElementById('gameContainer');
 gameContainer.style.visibility = 'hidden'; 
-const choiceOptions = document.getElementById('choiceOptions');
-choiceOptions.style.visibility = 'hidden';
 const turnTitle = document.getElementById('turnTitle');
 const playAgainButton = document.getElementById('playAgain');
 playAgainButton.style.visibility = 'hidden';
 const restartButton = document.getElementById('restart');
 restartButton.style.visibility = 'hidden';
 const gameOptions = document.getElementById('gameOptions');
+const timer = document.getElementById('timer');
+timer.style.visibility = 'hidden';
 
 let isPlayerTurn = true;
 let playerChoice = "";
 let computerChoice = "";
+let playerTwoPiece = "";
 let gameFinished = false;
 let winner = "";
 let noWinner = false;
 let hasAWinner = false;
+let pVp = false;
+let elapsedTime = 0;
+let stopwatchInterval;
 
 initialize();
 
@@ -27,45 +31,84 @@ function initialize(){
     pVcButton.addEventListener('click', function(){
         gameOptions.style.visibility = 'hidden';
         choosePiece();
-        startGameComputer();
     });
     pVpButton.addEventListener('click', function(){
         gameOptions.style.visibility = 'hidden';
+        pVp = true;
         choosePiece();
     });
     
 }
 
 function choosePiece(){
-        choiceOptions.style.visibility = 'visible';
-        let oChoice = document.getElementById('oImage');
-        oChoice.addEventListener('click', function() {
-            playerChoice = "o";
-            computerChoice = "x";
-            // startGame();
-        });
-        let xChoice = document.getElementById('xImage');
-        xChoice.addEventListener('click', function() {
-            playerChoice = "x";
-            computerChoice = "o";
-            // startGame();
-        });
+    let choosingPieces = Math.floor(Math.random() * 2);
+    if (choosingPieces == 1){
+        playerChoice = "o";
+        computerChoice = "x";
+        playerTwoChoice = "x";
+        startGame();
+    } else {
+        playerChoice = "x";
+        computerChoice = "o";
+        playerTwoChoice = "o";
+        startGame();
+    }
 }
 
-function startGameComputer(){
+function startGame(){
     title.style.visibility = 'visible';
     gameContainer.style.visibility = 'visible';
-    choiceOptions.style.display = 'none';
     restartButton.style.visibility = 'visible';
-    turnTitle.textContent = "Player Turn";
-    playerTile();
-    computerTile();
-    playAgain();
+    timer.style.visibility = 'visible';
+    if (pVp){
+        startTimer();
+        playerTile();
+        playerTwoTile();
+    } else {
+        startTimer();
+        playerTile();
+        computerTile(); 
+    }
     restartButtonPress();
+}
+
+function startTimer() {
+    //start timer if not already running
+    if (!stopwatchInterval) {
+        stopwatchInterval = setInterval(() => {
+        elapsedTime++; 
+
+        const minutes = Math.floor(elapsedTime / 60);
+        const seconds = elapsedTime % 60;
+
+        // format minutes
+        let formattedMinutes;
+        if (minutes < 10) {
+        formattedMinutes = '0' + minutes;
+        } else {
+        formattedMinutes = minutes;
+        }
+
+        // format seconds
+        let formattedSeconds;
+        if (seconds < 10) {
+        formattedSeconds = '0' + seconds;
+        } else {
+        formattedSeconds = seconds;
+        }
+        document.getElementById('timer').textContent = formattedMinutes + ':' + formattedSeconds;
+        }, 1000); 
+    }
+}
+
+function stopTimer() {
+    clearInterval(stopwatchInterval); 
+    stopwatchInterval = null; 
 }
 
 function playerTile(){
     let playerTilePlacement = document.querySelectorAll('.tiles');
+    turnTitle.textContent = "Player Turn";
     playerTilePlacement.forEach(tile => {
         tile.addEventListener('click', function(){
             if (!tile.hasChildNodes() && isPlayerTurn && !gameFinished){
@@ -76,16 +119,50 @@ function playerTile(){
                 playerImage.id = playerChoice;
                 tile.appendChild(playerImage);
                 isPlayerTurn = false;
-                console.log("Computer turn!");
                 checkGameCompletion();
-                setTimeout(function () {
+                if (pVp){
+                    setTimeout(function () {
                     if (!gameFinished) {
-                        turnTitle.textContent = "Computer Turn";
+                        turnTitle.textContent = "Player Two Turn";
                     }
-                }, 300);
+                }, 200);
                 setTimeout(function(){
-                    computerTile();
+                    playerTwoTile();
                 }, 1500);
+                } else {
+                    setTimeout(function () {
+                        if (!gameFinished) {
+                            turnTitle.textContent = "Computer Turn";
+                        }
+                    }, 300);
+                    setTimeout(function(){
+                        computerTile();
+                    }, 1500);
+                }
+            } else {
+                console.log("occupied");
+            }
+        });
+    });
+}
+
+//i know this is a lot of repeated code but i cant figure out how to combine these two functions lol
+function playerTwoTile(){
+    let playerTilePlacement = document.querySelectorAll('.tiles');
+    playerTilePlacement.forEach(tile => {
+        tile.addEventListener('click', function(){
+            if (!tile.hasChildNodes() && !isPlayerTurn && !gameFinished){
+                const playerTwoImage = document.createElement('img');
+                playerTwoImage.src = `images/${playerTwoChoice}.png`;
+                playerTwoImage.alt = `${playerTwoChoice} image`;
+                playerTwoImage.className = "imagesClass";
+                playerTwoImage.id = playerTwoChoice;
+                tile.appendChild(playerTwoImage);
+                isPlayerTurn = true;
+                checkGameCompletion();
+                setTimeout(function(){
+                    playerTile();
+                }, 300);
             } else {
                 console.log("occupied");
             }
@@ -108,13 +185,8 @@ function computerTile(){
         computerImage.id = computerChoice;
         randomEmptyTile.appendChild(computerImage);
         checkGameCompletion();
-        setTimeout(function () {
-            if (!gameFinished) {
-                turnTitle.textContent = "Player Turn";
-            }
-        }, 300);
-
         isPlayerTurn = true;
+        playerTile();
     }
 }
 
@@ -127,11 +199,14 @@ function checkGameCompletion(){
     let gameBoardArray = Array.from(gameBoard);
     let emptyArray = Array.from(gameBoard).filter(tile => !tile.hasChildNodes());
 
+    //decide who winner is
     const getTileID = (tile) => {
         if (tile.hasChildNodes()) {
             const id = tile.firstChild.id;
             if (id === playerChoice) {
                 winner = "Player";
+            } else if (id === playerTwoChoice) {
+                winner = "Player Two";
             } else {
                 winner = "Computer";
             }
@@ -193,6 +268,7 @@ function checkGameCompletion(){
 
 function gameOver(){
     console.log("Game over!");
+    stopTimer();
     playAgainButton.style.visibility = 'visible';
     restartButton.style.visibility = 'hidden';
     if (!noWinner){
